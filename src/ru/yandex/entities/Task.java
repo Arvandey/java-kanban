@@ -1,19 +1,18 @@
 package ru.yandex.entities;
 
-import ru.yandex.managers.TaskManager;
 import ru.yandex.enums.Status;
 
 public class Task {
 
+    protected int id;
     protected String name;
     protected String description;
-    protected int id;
     protected Status status;
 
-    public Task(String name, String description, Status status) {
+    public Task(int id, String name, String description, Status status) {
+        this.id = id;
         this.name = name;
         this.description = description;
-        this.id = TaskManager.getNewId();
         this.status = status;
     }
 
