@@ -91,7 +91,7 @@ public class TestManager {
         printTasksStatuses();
         String status = scanner.nextLine().replace(" ", "_");
         Status taskStatus = Status.valueOf(status.toUpperCase());
-        Task testTask = new Task(TaskManager.getNewId(), title, description, taskStatus);
+        Task testTask = new Task(title, description, taskStatus);
         if (tasksType == TasksType.SUBTASK) {
             System.out.println("Введите id эпика:");
             epicId = scanner.nextLine();
@@ -249,18 +249,18 @@ public class TestManager {
     }
 
     private static void enterTestData(TaskManager taskManager) {
-        Task testTask1 = new Task(TaskManager.getNewId(),"Уборка", "Сделать уборку дома", Status.NEW);
-        Task testTask2 = new Task(TaskManager.getNewId(),"Cпринт 4", "Доделать ДЗ", Status.NEW);
+        Task testTask1 = new Task("Уборка", "Сделать уборку дома", Status.NEW);
+        Task testTask2 = new Task("Cпринт 4", "Доделать ДЗ", Status.NEW);
         taskManager.createNewTask(testTask1);
         taskManager.createNewTask(testTask2);
-        Epic testEpic1 = new Epic(TaskManager.getNewId(),"Приготовить обед", "Приготовить обед");
-        Epic testEpic2 = new Epic(TaskManager.getNewId(),"Приготовить ужин", "Приготовить ужин");
+        Epic testEpic1 = new Epic("Приготовить обед", "Приготовить обед");
+        Epic testEpic2 = new Epic("Приготовить ужин", "Приготовить ужин");
         taskManager.createNewTask(testEpic1);
         taskManager.createNewTask(testEpic2);
-        Subtask testSubtask1 = new Subtask(TaskManager.getNewId(),"Суп", "Сварить суп", Status.NEW, testEpic1.getId());
-        Subtask testSubtask2 = new Subtask(TaskManager.getNewId(),"Блюдо основное", "Приготовить основное блюдо", Status.NEW, testEpic1.getId());
-        Subtask testSubtask3 = new Subtask(TaskManager.getNewId(),"Салат", "Приготовить салат", Status.NEW, testEpic2.getId());
-        Subtask testSubtask4 = new Subtask(TaskManager.getNewId(),"Блюдо на ужин", "Приготовить блюдо на ужин", Status.NEW, testEpic2.getId());
+        Subtask testSubtask1 = new Subtask("Суп", "Сварить суп", Status.NEW, testEpic1.getId());
+        Subtask testSubtask2 = new Subtask("Блюдо основное", "Приготовить основное блюдо", Status.NEW, testEpic1.getId());
+        Subtask testSubtask3 = new Subtask("Салат", "Приготовить салат", Status.NEW, testEpic2.getId());
+        Subtask testSubtask4 = new Subtask("Блюдо на ужин", "Приготовить блюдо на ужин", Status.NEW, testEpic2.getId());
         taskManager.createNewTask(testSubtask1);
         taskManager.createNewTask(testSubtask2);
         taskManager.createNewTask(testSubtask3);
