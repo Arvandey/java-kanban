@@ -2,6 +2,7 @@ package ru.yandex.entities;
 
 import ru.yandex.enums.Status;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Epic extends Task {
@@ -13,8 +14,20 @@ public class Epic extends Task {
         this.subtasks = new HashMap<>();
     }
 
-    public HashMap<Integer, Subtask> getSubtasks() {
-        return subtasks;
+    public ArrayList<Subtask> getSubtasks() {
+        return new ArrayList<>(subtasks.values());
+    }
+
+    public void add(Subtask subtask) {
+        subtasks.put(subtask.getId(), subtask);
+    }
+
+    public void clearSubtasks() {
+        subtasks.clear();
+    }
+
+    public void removeSubtask(int subtaskId) {
+        subtasks.remove(subtaskId);
     }
 
 }

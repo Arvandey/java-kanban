@@ -41,7 +41,7 @@ public class TaskManager {
     public void createNewTask(Subtask subtask) {
         subtask.setId(getNewId());
         if (epics.containsKey(subtask.getEpicId())) {
-            epics.get(subtask.getEpicId()).getSubtasks().put(subtask.getId(), subtask);
+            epics.get(subtask.getEpicId()).add(subtask);
         } else {
             System.out.println("Эпика с данным id не существует.");
         }
@@ -66,9 +66,7 @@ public class TaskManager {
                 tasksArray = new ArrayList<>(tasks.values());
                 break;
             case SUBTASK:
-                for (Epic epic : epics.values()) {
-                    tasksArray.addAll(epic.getSubtasks().values());
-                }
+                tasksArray = new ArrayList<>(subtasks.values());
                 break;
             case EPIC:
                 tasksArray = new ArrayList<>(epics.values());
@@ -86,12 +84,13 @@ public class TaskManager {
                 break;
             case SUBTASK:
                 for (Epic epic : epics.values()) {
-                    epic.getSubtasks().clear();
+                    epic.clearSubtasks();
                 }
+                subtasks.clear();
                 break;
             case EPIC:
                 for (Epic epic : epics.values()) {
-                    epic.getSubtasks().clear();
+                    epic.clearSubtasks();
                 }
                 epics.clear();
                 break;
@@ -105,23 +104,40 @@ public class TaskManager {
     public void deleteTask(int id, TasksType tasksType) {
         switch (tasksType) {
             case TASK:
-                tasks.remove(id);
+                if (tasks.containsKey(id)) {
+                    tasks.remove(id);
+                } else {
+                    System.out.println("Задача не найден.");
+                }
                 break;
             case SUBTASK:
-                for (Epic epic : epics.values()) {
-                    epic.getSubtasks().remove(id);
+                if (subtasks.containsKey(id)) {
+                    int epicId = subtasks.get(id).getEpicId();
+                    subtasks.remove(id);
+                    epics.get(epicId).removeSubtask(id);
+                } else {
+                    System.out.println("Подзадача не найден.");
                 }
                 break;
             case EPIC:
-                epics.get(id).getSubtasks().clear();
-                epics.remove(id);
+                if (epics.containsKey(id)) {
+                    ArrayList<Subtask> subtasksToDelete = epics.get(id).getSubtasks();
+                    if (!subtasksToDelete.isEmpty()) {
+                        for (Subtask subtask : subtasksToDelete) {
+                            subtasks.remove(subtask.getId());
+                        }
+                    }
+                    epics.remove(id);
+                } else {
+                    System.out.println("Эпик не найден.");
+                }
             default:
                 System.out.println("Неизвестный тип задач");
         }
     }
 
     public ArrayList<Subtask> getSubtasks(int epicId) {
-        return new ArrayList<>(epics.get(epicId).getSubtasks().values());
+        return epics.get(epicId).getSubtasks();
     }
 
     public void updateTask(Task task) {
@@ -138,7 +154,7 @@ public class TaskManager {
         Subtask subtaskToUpdate = subtasks.get(subtask.getId());
         if (subtaskToUpdate != null) {
             subtasks.put(subtaskToUpdate.getId(), subtaskToUpdate);
-            epics.get(subtaskToUpdate.getEpicId()).getSubtasks().put(subtaskToUpdate.getId(), subtaskToUpdate);
+            epics.get(subtaskToUpdate.getEpicId()).add(subtask);
             updateEpicStatus(subtask.getEpicId());
         } else {
             System.out.println("Подзадача не найден.");
@@ -153,7 +169,7 @@ public class TaskManager {
             epicToUpdate.setDescription(epic.getDescription());
             epics.put(epicToUpdate.getId(), epicToUpdate);
         } else {
-            System.out.println("Эпика не найден.");
+            System.out.println("Эпик не найден.");
         }
     }
 
