@@ -12,7 +12,7 @@ import java.util.Scanner;
 public class TestManager {
     public static void startTest() {
         Scanner scanner = new Scanner(System.in);
-        TaskManager taskManager = new TaskManager();
+        TaskManager taskManager = Manager.getDefault();
 
         enterTestData(taskManager);
 
@@ -42,6 +42,9 @@ public class TestManager {
                 case "7":
                     printSubtasks(scanner, taskManager);
                     break;
+                case "8":
+                    System.out.println(taskManager.getHistory());
+                    break;
                 case "0":
                     return;
                 default:
@@ -59,6 +62,7 @@ public class TestManager {
         System.out.println("5 - Удалить задачу");
         System.out.println("6 - Обновить задачу");
         System.out.println("7 - Получить список подзадач эпика");
+        System.out.println("8 - История просмотра");
         System.out.println("0 - Выход");
     }
 
@@ -91,16 +95,20 @@ public class TestManager {
         printTasksStatuses();
         String status = scanner.nextLine().replace(" ", "_");
         Status taskStatus = Status.valueOf(status.toUpperCase());
-        Task testTask = new Task(title, description, taskStatus);
         if (tasksType == TasksType.SUBTASK) {
             System.out.println("Введите id эпика:");
             epicId = scanner.nextLine();
             if (!epicId.isEmpty()) {
-                taskManager.createNewTask(testTask);
+                Subtask testSubtask = new Subtask(title,description, taskStatus, Integer.parseInt(epicId));
+                taskManager.createNewTask(testSubtask);
             } else {
                 System.out.println("Необходимо ввести id эпика:");
             }
-        } else {
+        } else if (tasksType == TasksType.EPIC) {
+            Epic testEpic = new Epic(title, description);
+            taskManager.createNewTask(testEpic);
+        } else if (tasksType == TasksType.TASK) {
+            Task testTask = new Task(title, description, taskStatus);
             taskManager.createNewTask(testTask);
         }
 
